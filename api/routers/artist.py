@@ -27,3 +27,11 @@ def get_all_artists(
     session: Session = Depends(get_session),
 ) -> GetAllArtistsResponse:
     return artists_service.get_all_artists(session)
+
+
+@router.delete("/{artist_id}", status_code=204)
+def delete_artist(
+    artist_id: int,
+    session: Session = Depends(get_session),
+) -> None:
+    return artists_service.delete_artist(artist_id, session)

@@ -13,3 +13,16 @@ class ArtistWithSameNameAlreadyExistsException(HTTPException):
                 "message": self.app_error.message,
             },
         )
+
+
+class ArtistNotFoundException(HTTPException):
+    app_error = ERROR_CATALOGUE[ErrorCode.ARTIST_NOT_FOUND]
+
+    def __init__(self):
+        super().__init__(
+            status_code=self.app_error.status,
+            detail={
+                "error_code": self.app_error.error_code,
+                "message": self.app_error.message,
+            },
+        )

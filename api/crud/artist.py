@@ -25,3 +25,8 @@ class CRUDArtist:
     def get_all(self) -> list[Artist]:
         statement = select(Artist)
         return list(self.session.exec(statement).all())
+
+    def delete(self, artist: Artist) -> None:
+        self.session.delete(artist)
+        self.session.commit()
+        return
