@@ -1,7 +1,5 @@
-from typing import Union
-
-from database.author import Author
 from database.init import create_db_and_tables, get_session
+from database.musician import Artist
 from fastapi import Depends, FastAPI
 from sqlmodel import Session, select
 
@@ -14,7 +12,7 @@ def on_startup():
 
 
 @app.get("/", status_code=200)
-def get_authors(
+def get_musicians(
     session: Session = Depends(get_session),
 ):
-    session.exec(select(Author)).all()
+    session.exec(select(Artist)).all()
