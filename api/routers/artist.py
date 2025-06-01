@@ -10,7 +10,7 @@ from sqlmodel import Session
 
 router = APIRouter(
     prefix="/artists",
-    tags=[""],
+    tags=["artists"],
 )
 
 

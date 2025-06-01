@@ -1,13 +1,9 @@
-from dataclasses import dataclass
-from enum import IntEnum, StrEnum, unique
-
 from crud.artist import CRUDArtist
 from database.artist import Artist
 from exceptions.artist import (
     ArtistNotFoundException,
     ArtistWithSameNameAlreadyExistsException,
 )
-from fastapi import HTTPException, status
 from schemas.artist import (
     ArtistResponseBase,
     CreateArtistRequest,
@@ -21,7 +17,7 @@ def create_artist(
     request: CreateArtistRequest, session: Session
 ) -> CreateArtistResponse:
     artist_with_same_name = CRUDArtist(session).get_by_name(request.name)
-    if artist_with_same_name is None:
+    if artist_with_same_name is not None:
         raise ArtistWithSameNameAlreadyExistsException
 
     artist_in = Artist(name=request.name)

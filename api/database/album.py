@@ -18,7 +18,6 @@ class MusicGenre(StrEnum):
 
 class ArtistAlbum(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    is_main_artist: bool
 
     artist_id: int = Field(foreign_key="artist.id")
     artist: "Artist" = Relationship(back_populates="artist_album_links")

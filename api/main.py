@@ -1,6 +1,6 @@
 from database.init import create_db_and_tables
 from fastapi import FastAPI
-from routers import artist
+from routers import album, artist
 
 app = FastAPI()
 
@@ -11,3 +11,4 @@ def on_startup():
 
 
 app.include_router(artist.router)
+app.include_router(album.router)
