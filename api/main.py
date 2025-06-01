@@ -1,10 +1,9 @@
 from typing import Union
 
-from fastapi import Depends, FastAPI
-from sqlmodel import Session, select
-
 from database.author import Author
 from database.init import create_db_and_tables, get_session
+from fastapi import Depends, FastAPI
+from sqlmodel import Session, select
 
 app = FastAPI()
 
@@ -13,9 +12,9 @@ app = FastAPI()
 def on_startup():
     create_db_and_tables()
 
+
 @app.get("/", status_code=200)
-def refine_audit_criteria(
+def get_authors(
     session: Session = Depends(get_session),
 ):
-
     session.exec(select(Author)).all()
