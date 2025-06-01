@@ -18,6 +18,10 @@ class CRUDArtist:
         statement = select(Artist).where(Artist.id == artist_id)
         return self.session.exec(statement).first()
 
+    def get_by_name(self, name: str) -> Optional[Artist]:
+        statement = select(Artist).where(Artist.name == name)
+        return self.session.exec(statement).first()
+
     def get_all(self) -> list[Artist]:
         statement = select(Artist)
         return list(self.session.exec(statement).all())
