@@ -2,11 +2,11 @@ from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING
 
+from database.song import Song
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from database.artist import Artist
-    from database.song import Song
 
 
 class MusicGenre(StrEnum):
@@ -20,11 +20,11 @@ class ArtistAlbum(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     is_main_artist: bool
 
-    album_id: int = Field(foreign_key="album.id")
-    album: "Album" = Relationship(back_populates="artistalbum")
-
     artist_id: int = Field(foreign_key="artist.id")
-    artist: "Artist" = Relationship(back_populates="artistalbum")
+    artist: "Artist" = Relationship(back_populates="artist_album_links")
+
+    album_id: int = Field(foreign_key="album.id")
+    album: "Album" = Relationship(back_populates="artist_album_links")
 
 
 class Album(SQLModel, table=True):
@@ -34,8 +34,8 @@ class Album(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=datetime.now, nullable=False)
 
-    songs: list["Song"] = Relationship(back_populates="song", cascade_delete=True)
+    songs: list["Song"] = Relationship(back_populates="album", cascade_delete=True)
 
     artist_album_links: list["ArtistAlbum"] = Relationship(
-        back_populates="artistalbum", cascade_delete=True
+        back_populates="album", cascade_delete=True
     )

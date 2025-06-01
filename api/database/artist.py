@@ -1,10 +1,8 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
+from database.album import ArtistAlbum
 from sqlmodel import Field, Relationship, SQLModel
-
-if TYPE_CHECKING:
-    from database.album import ArtistAlbum
 
 
 class Artist(SQLModel, table=True):
@@ -14,5 +12,6 @@ class Artist(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.now, nullable=False)
 
     artist_album_links: list["ArtistAlbum"] = Relationship(
-        back_populates="artistalbum", cascade_delete=True
+        back_populates="artist",
+        cascade_delete=True,
     )
