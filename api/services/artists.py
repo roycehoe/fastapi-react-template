@@ -3,6 +3,7 @@ from enum import IntEnum, StrEnum, unique
 
 from crud.artist import CRUDArtist
 from database.artist import Artist
+from exceptions.artist import ArtistWithSameNameAlreadyExistsException
 from fastapi import HTTPException, status
 from schemas.artist import (
     ArtistResponseBase,
@@ -11,45 +12,6 @@ from schemas.artist import (
     GetAllArtistsResponse,
 )
 from sqlmodel import Session
-
-
-@unique
-class ErrorCode(IntEnum):
-    ARTIST_NAME_CONFLICT = 10001
-
-
-@unique
-class ErrorMessage(StrEnum):
-    ARTIST_NAME_CONFLICT = "Artist with the same name already exists"
-
-
-@dataclass(frozen=True)
-class AppError:
-    error_code: ErrorCode
-    status: int
-    message: str
-
-
-ERROR_CATALOGUE: dict[ErrorCode, AppError] = {
-    ErrorCode.ARTIST_NAME_CONFLICT: AppError(
-        error_code=ErrorCode.ARTIST_NAME_CONFLICT,
-        status=status.HTTP_409_CONFLICT,
-        message=ErrorMessage.ARTIST_NAME_CONFLICT,
-    )
-}
-
-
-class ArtistWithSameNameAlreadyExistsException(HTTPException):
-    app_error = ERROR_CATALOGUE[ErrorCode.ARTIST_NAME_CONFLICT]
-
-    def __init__(self):
-        super().__init__(
-            status_code=self.app_error.status,
-            detail={
-                "error_code": self.app_error.error_code,
-                "message": self.app_error.message,
-            },
-        )
 
 
 def create_artist(
