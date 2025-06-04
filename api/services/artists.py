@@ -5,10 +5,12 @@ from exceptions.artist import (
     ArtistWithSameNameAlreadyExistsException,
 )
 from schemas.artist import (
+    AlbumOut,
     ArtistResponseBase,
     CreateArtistRequest,
     CreateArtistResponse,
     GetAllArtistsResponse,
+    SongOut,
 )
 from sqlmodel import Session
 
@@ -23,10 +25,10 @@ def create_artist(
     artist_in = Artist(name=request.name)
     created_artist = CRUDArtist(session).create(artist_in)
     return CreateArtistResponse(
-        id=created_artist.id,
+        artist_id=created_artist.id,
         name=created_artist.name,
         created_at=created_artist.created_at,
-        artist_album_links=created_artist.artist_album_links,
+        albums=[],
     )
 
 
@@ -35,10 +37,22 @@ def get_all_artists(session: Session) -> GetAllArtistsResponse:
 
     all_artists_out = [
         ArtistResponseBase(
-            id=artist.id,
+            artist_id=artist.id,
             name=artist.name,
             created_at=artist.created_at,
-            artist_album_links=artist.artist_album_links,
+            albums=[
+                AlbumOut(
+                    album_id=artist_album_link.album.id,
+                    name=artist_album_link.album.name,
+                    genre=artist_album_link.album.genre,
+                    created_at=artist_album_link.album.created_at,
+                    songs=[
+                        SongOut(song_id=song.id, name=song.name)
+                        for song in artist_album_link.album.songs
+                    ],
+                )
+                for artist_album_link in artist.artist_album_links
+            ],
         )
         for artist in all_artists
     ]
