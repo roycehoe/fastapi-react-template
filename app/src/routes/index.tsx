@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useGetArtists } from "@/api/getArtists";
+import { CardArtist } from "@/components/CardArtist";
 
 export const Route = createFileRoute("/")({
   component: App,
@@ -20,7 +21,7 @@ function App() {
     return (
       <div>
         {data.data.map((artist) => {
-          return <div>{artist.name}</div>;
+          return <CardArtist artist={artist}></CardArtist>;
         })}
       </div>
     );
